@@ -1,0 +1,167 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Documentation",
+        "description": "API Documenation for App backend service",
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api",
+            "description": "API App Server"
+        }
+    ],
+    "paths": {
+        "/v1/login": {
+            "post": {
+                "tags": [
+                    "AUTH"
+                ],
+                "summary": "User login",
+                "operationId": "f73e99b0f556dcc11b15f2fcac9adf4e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "LoginRequest": {
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "AuthResource": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/SuccessResource"
+                    },
+                    {
+                        "properties": {
+                            "meta": {
+                                "$ref": "#/components/schemas/MetaResource"
+                            },
+                            "data": {
+                                "properties": {
+                                    "token": {
+                                        "type": "string"
+                                    },
+                                    "role": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                ]
+            },
+            "ErrorResource": {
+                "properties": {
+                    "data": {
+                        "type": "object"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/MetaResource"
+                    }
+                },
+                "type": "object"
+            },
+            "MetaResource": {
+                "properties": {
+                    "code": {
+                        "type": "integer"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "pagination": {
+                        "properties": {
+                            "total": {
+                                "type": "integer"
+                            },
+                            "count": {
+                                "type": "integer"
+                            },
+                            "per_page": {
+                                "type": "integer"
+                            },
+                            "current_page": {
+                                "type": "integer"
+                            },
+                            "total_pages": {
+                                "type": "integer"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "errors": {
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "SuccessResource": {
+                "properties": {
+                    "data": {
+                        "type": "object"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/MetaResource"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "description": "Enter token in format: <b>Bearer token_here</b>",
+                "name": "Authorization",
+                "in": "header",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
